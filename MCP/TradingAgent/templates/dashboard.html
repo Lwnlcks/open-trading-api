@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KIS AI Trading Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .log-card { margin-bottom: 20px; border-left: 5px solid #007bff; }
+        .market-domestic { border-left-color: #dc3545; }
+        .market-overseas { border-left-color: #0d6efd; }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">AI Trading Dashboard</h1>
+
+    {% for log in logs %}
+    <div class="card log-card market-{{ log.market_type }}">
+        <div class="card-header d-flex justify-content-between">
+            <span class="badge bg-secondary">{{ log.market_type | upper }}</span>
+            <small class="text-muted">{{ log.timestamp }}</small>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ log.stock_name }} - {{ log.decision | upper }} ({{ log.quantity }}주)</h5>
+            <p class="card-text"><strong>User Prompt:</strong> {{ log.user_prompt }}</p>
+            <p class="card-text"><strong>AI Reason:</strong> {{ log.reason }}</p>
+            <div class="progress mb-2" style="height: 5px;">
+                <div class="progress-bar" role="progressbar" style="width: {{ log.confidence * 100 }}%;"></div>
+            </div>
+            <details>
+                <summary class="text-primary" style="cursor: pointer;">Market Data Details</summary>
+                <pre class="bg-light p-2 mt-2" style="font-size: 0.8rem;">{{ log.market_data | tojson(indent=2) }}</pre>
+            </details>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
